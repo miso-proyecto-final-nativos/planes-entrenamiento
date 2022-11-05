@@ -1,21 +1,21 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IRoutine } from './iroutine.interface';
-import { PlanEntrenamientoEntity } from './planes-entrenamiento.entity';
+import { IRutina } from './irutina.interface';
+import { PlanEntrenamientoEntity } from './plan-entrenamiento.entity';
 
 @Entity()
-export class RoutineEntity implements IRoutine {
+export class RutinaEntity implements IRutina {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
-  day: number;
+  dia: number;
 
   @Column()
-  exercise: string;
+  ejercicio: string;
 
   @ManyToOne(
     () => PlanEntrenamientoEntity,
-    (planEntrenamiento) => planEntrenamiento.routines,
+    (planEntrenamiento) => planEntrenamiento.rutinas,
     {
       onDelete: 'CASCADE',
     },

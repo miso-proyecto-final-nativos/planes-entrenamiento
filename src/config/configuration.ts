@@ -4,10 +4,6 @@ export const configuration = () => ({
     host: process.env.AUTH_MS_HOST,
     port: parseInt(process.env.AUTH_MS_PORT, 10) || 4000,
   },
-  catalogo_microservice: {
-    host: process.env.MS_CATALOGO_HOST,
-    port: parseInt(process.env.MS_CATALOGO_PORT, 10) || 4020,
-  },
   usuario_microservice: {
     host: process.env.USUARIO_MS_HOST,
     port: parseInt(process.env.USUARIO_MS_PORT, 10) || 4010,
