@@ -22,7 +22,7 @@ export class PlanesEntrenamientoService {
 
   async obtenerTodos(): Promise<PlanEntrenamientoEntity[]> {
     return await this.planEntrenamientoRepository.find({
-      relations: ['routines'],
+      relations: ['rutinas'],
     });
   }
 

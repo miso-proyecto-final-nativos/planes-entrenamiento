@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PlanesEntrenamientoService } from './planes-entrenamiento.service';
-import { PlanEntrenamientoDto } from './dto/create-planes-entrenamiento.dto';
+import { PlanEntrenamientoDto } from './dto/plan-entrenamiento.dto';
 import { BusinessErrorsInterceptor } from '../shared/interceptors/business-errors/business-errors.interceptor';
 import { PlanEntrenamientoEntity } from './entities/plan-entrenamiento.entity';
 import { plainToInstance } from 'class-transformer';
@@ -40,6 +40,7 @@ import {
 @Controller('planes-entrenamiento')
 export class PlanesEntrenamientoController {
   constructor(
+    @Inject('MS_CATALOGO_SERVICE') private clienteCatalogoService: ClientProxy,
     @Inject('USER_MS') private clienteUsuarioService: ClientProxy,
     private readonly planesEntrenamientoService: PlanesEntrenamientoService,
     private health: HealthCheckService,
@@ -55,6 +56,7 @@ export class PlanesEntrenamientoController {
   @UseGuards(AuthGuard)
   @Post()
   async crear(@Body() planEntrenamientoDto: PlanEntrenamientoDto) {
+    await this.validarSuscripcion(planEntrenamientoDto.subscription);
     const planEntrenamiento: PlanEntrenamientoEntity = plainToInstance(
       PlanEntrenamientoEntity,
       planEntrenamientoDto,
@@ -147,6 +149,29 @@ export class PlanesEntrenamientoController {
       planEntrenamientoId,
       deportistaId,
     );
+  }
+
+  private async validarSuscripcion(suscripcionId: number) {
+    const suscripcion$ = this.clienteCatalogoService
+      .send({ role: 'suscripcion', cmd: 'getById' }, { suscripcionId })
+      .pipe(
+        timeout(5000),
+        catchError((err) => {
+          if (err instanceof TimeoutError) {
+            return throwError(() => new RequestTimeoutException());
+          }
+          return throwError(() => err);
+        }),
+      );
+
+    const suscripcion = await firstValueFrom(suscripcion$);
+
+    if (!suscripcion) {
+      throw new BusinessLogicException(
+        `No se encontró una suscripción con el id ${suscripcionId}`,
+        BusinessError.NOT_FOUND,
+      );
+    }
   }
 
   private async validarIdDeportista(idDeportista: number) {

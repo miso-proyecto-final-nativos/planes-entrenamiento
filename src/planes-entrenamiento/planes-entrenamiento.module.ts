@@ -29,6 +29,18 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
   providers: [
     PlanesEntrenamientoService,
     {
+      provide: 'MS_CATALOGO_SERVICE',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) =>
+        ClientProxyFactory.create({
+          transport: Transport.TCP,
+          options: {
+            host: configService.get<string>('catalogo_microservice.host'),
+            port: configService.get<number>('catalogo_microservice.port'),
+          },
+        }),
+    },
+    {
       provide: 'AUTH_CLIENT',
       inject: [ConfigService],
       useFactory: (configService: ConfigService) =>

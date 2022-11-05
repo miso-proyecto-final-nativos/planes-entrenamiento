@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { RoutineDto } from './routine.dto';
 
 export class PlanEntrenamientoDto {
@@ -15,8 +15,8 @@ export class PlanEntrenamientoDto {
   @IsString()
   readonly image: string;
 
-  @IsString()
-  readonly subscription: string;
+  @IsNumber()
+  readonly subscription: number;
 
   @IsArray()
   readonly routines?: RoutineDto[];

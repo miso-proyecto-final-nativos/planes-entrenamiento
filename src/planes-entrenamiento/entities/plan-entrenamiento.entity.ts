@@ -9,12 +9,6 @@ import {
 import { RutinaEntity } from './rutina.entity';
 import { DeportistaEntity } from './deportista.entity';
 
-export enum Suscripcion {
-  FREE = 'free',
-  INTERMEDIATE = 'intermediate',
-  PRO = 'pro',
-}
-
 @Entity()
 export class PlanEntrenamientoEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -23,12 +17,8 @@ export class PlanEntrenamientoEntity {
   @Column()
   imagen?: string;
 
-  @Column({
-    type: 'enum',
-    enum: Suscripcion,
-    default: Suscripcion.FREE,
-  })
-  suscripcion?: Suscripcion;
+  @Column()
+  suscripcion?: number;
 
   @Column()
   nombre: string;
@@ -44,7 +34,10 @@ export class PlanEntrenamientoEntity {
   })
   rutinas?: RutinaEntity[];
 
-  @ManyToMany(() => DeportistaEntity, (deportista) => deportista.planesEntrenamiento)
+  @ManyToMany(
+    () => DeportistaEntity,
+    (deportista) => deportista.planesEntrenamiento,
+  )
   @JoinTable()
   deportistas?: DeportistaEntity[];
 }
