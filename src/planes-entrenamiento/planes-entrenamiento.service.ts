@@ -29,11 +29,24 @@ export class PlanesEntrenamientoService {
   async obtenerPlanesSugeridosDeportista(
     deportistaId: number,
   ): Promise<PlanEntrenamientoEntity[]> {
+    const planesEntrenamientoValidos: PlanEntrenamientoEntity[] = [];
     const planesEntrenamiento: PlanEntrenamientoEntity[] =
       await this.planEntrenamientoRepository.find({
-        relations: ['rutinas'],
+        relations: ['rutinas', 'deportistas'],
       });
-    return this.obtenerPlanesAleatorios(planesEntrenamiento);
+    planesEntrenamiento.forEach((planEntrenamiento) => {
+      const deportistaPlanEntrenamiento = planEntrenamiento.deportistas.find(
+        (deportista) => {
+          return deportista.id == deportistaId;
+        },
+      );
+      console.log(deportistaPlanEntrenamiento);
+      if (!deportistaPlanEntrenamiento) {
+        delete planEntrenamiento.deportistas;
+        planesEntrenamientoValidos.push(planEntrenamiento);
+      }
+    });
+    return this.obtenerPlanesAleatorios(planesEntrenamientoValidos);
   }
 
   async obtenerPlanesRegistradosDeportista(
@@ -79,6 +92,15 @@ export class PlanesEntrenamientoService {
       throw new BusinessLogicException(
         'No se encontró un plan de entrenamiento con el id suministrado',
         BusinessError.NOT_FOUND,
+      );
+
+    const deportistaPlanEntrenamiento: DeportistaEntity =
+      planEntrenamiento.deportistas.find((e) => e.id === deportista.id);
+
+    if (deportistaPlanEntrenamiento)
+      throw new BusinessLogicException(
+        `El deportista con el id suministrado ya tiene registrado el plan de entremaniento '${planEntrenamiento.nombre}'`,
+        BusinessError.PRECONDITION_FAILED,
       );
 
     planEntrenamiento.deportistas = [
@@ -164,16 +186,16 @@ export class PlanesEntrenamientoService {
       );
 
     const deportistaPlanEntrenamiento: DeportistaEntity =
-      planEntrenamiento.deportistas.find((e) => e.id === deportista.id);
+      planEntrenamiento.deportistas.find((e) => e.id == deportistaId);
 
     if (!deportistaPlanEntrenamiento)
       throw new BusinessLogicException(
-        `El deportista con el id suministrado no ha registrado el plan de entremaniento ${planEntrenamiento.nombre}`,
+        `El deportista con el id suministrado no ha registrado el plan de entremaniento '${planEntrenamiento.nombre}'`,
         BusinessError.PRECONDITION_FAILED,
       );
 
     planEntrenamiento.deportistas = planEntrenamiento.deportistas.filter(
-      (e) => e.id !== deportistaId,
+      (e) => e.id != deportistaId,
     );
     await this.planEntrenamientoRepository.save(planEntrenamiento);
   }
