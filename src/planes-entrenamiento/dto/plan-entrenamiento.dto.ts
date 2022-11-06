@@ -16,7 +16,10 @@ export class PlanEntrenamientoDto {
   readonly image: string;
 
   @IsNumber()
-  readonly subscription: number;
+  readonly suscripcion: number;
+
+  @IsNumber()
+  readonly nivelPlan?: number;
 
   @IsArray()
   readonly routines?: RoutineDto[];

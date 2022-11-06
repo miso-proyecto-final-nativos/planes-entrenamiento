@@ -56,12 +56,13 @@ export class PlanesEntrenamientoController {
   @UseGuards(AuthGuard)
   @Post()
   async crear(@Body() planEntrenamientoDto: PlanEntrenamientoDto) {
-    await this.validarSuscripcion(planEntrenamientoDto.subscription);
+    await this.validarSuscripcion(planEntrenamientoDto.suscripcion);
+    await this.validarNivelPlan(planEntrenamientoDto.nivelPlan);
     const planEntrenamiento: PlanEntrenamientoEntity = plainToInstance(
       PlanEntrenamientoEntity,
       planEntrenamientoDto,
     );
-    return this.planesEntrenamientoService.crear(planEntrenamiento);
+    return await this.planesEntrenamientoService.crear(planEntrenamiento);
   }
 
   @UseGuards(AuthGuard)
@@ -169,6 +170,29 @@ export class PlanesEntrenamientoController {
     if (!suscripcion) {
       throw new BusinessLogicException(
         `No se encontró una suscripción con el id ${suscripcionId}`,
+        BusinessError.NOT_FOUND,
+      );
+    }
+  }
+
+  private async validarNivelPlan(nivelPlanId: number) {
+    const suscripcion$ = this.clienteCatalogoService
+      .send({ role: 'nivelPlan', cmd: 'getById' }, { nivelPlanId })
+      .pipe(
+        timeout(5000),
+        catchError((err) => {
+          if (err instanceof TimeoutError) {
+            return throwError(() => new RequestTimeoutException());
+          }
+          return throwError(() => err);
+        }),
+      );
+
+    const suscripcion = await firstValueFrom(suscripcion$);
+
+    if (!suscripcion) {
+      throw new BusinessLogicException(
+        `No se encontró un nivel de plan de entrenamiento con el id ${nivelPlanId}`,
         BusinessError.NOT_FOUND,
       );
     }

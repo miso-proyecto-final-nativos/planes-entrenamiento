@@ -29,6 +29,9 @@ export class PlanEntrenamientoEntity {
   @Column()
   duracion?: string;
 
+  @Column()
+  nivelPlan?: number;
+
   @OneToMany(() => RutinaEntity, (routine) => routine.planEntrenamiento, {
     cascade: true,
   })
