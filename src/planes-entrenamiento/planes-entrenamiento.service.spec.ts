@@ -57,6 +57,7 @@ describe('PlanesEntrenamientoService', () => {
         duracion: faker.commerce.productAdjective(),
         imagen: faker.image.imageUrl(),
         suscripcion: faker.datatype.number(10),
+        nivelPlan: faker.datatype.number(3),
         rutinas: rutinasList,
       });
       planesEntrenamientoList.push(planEntrenamiento);
@@ -145,6 +146,9 @@ describe('PlanesEntrenamientoService', () => {
     expect(planEntrenamiento.suscripcion).toEqual(
       planesEntrenamientoList[0].suscripcion,
     );
+    expect(planEntrenamiento.nivelPlan).toEqual(
+      planesEntrenamientoList[0].nivelPlan,
+    );
     expect(planEntrenamiento.rutinas).toEqual(
       planesEntrenamientoList[0].rutinas,
     );
@@ -175,6 +179,7 @@ describe('PlanesEntrenamientoService', () => {
       duracion: faker.commerce.productAdjective(),
       imagen: faker.image.imageUrl(),
       suscripcion: faker.datatype.number(10),
+      nivelPlan: faker.datatype.number(3),
       rutinas: rutinasList,
     };
 
@@ -198,6 +203,9 @@ describe('PlanesEntrenamientoService', () => {
     );
     expect(planEntrenamientoAlmacenado.suscripcion).toEqual(
       planEntrenamientoNuevo.suscripcion,
+    );
+    expect(planEntrenamientoAlmacenado.nivelPlan).toEqual(
+      planEntrenamientoNuevo.nivelPlan,
     );
     expect(planEntrenamientoAlmacenado.rutinas).toEqual(
       planEntrenamientoNuevo.rutinas,
@@ -243,6 +251,9 @@ describe('PlanesEntrenamientoService', () => {
     );
     expect(planEntrenamientoAlmacenado.suscripcion).toEqual(
       planEntrenamientoActualizado.suscripcion,
+    );
+    expect(planEntrenamientoAlmacenado.nivelPlan).toEqual(
+      planEntrenamientoActualizado.nivelPlan,
     );
     expect(planEntrenamientoAlmacenado.rutinas).toEqual(
       planEntrenamientoActualizado.rutinas,
@@ -333,7 +344,7 @@ describe('PlanesEntrenamientoService', () => {
       ),
     ).rejects.toHaveProperty(
       'message',
-      `El deportista con el id suministrado no ha registrado el plan de entremaniento ${planesEntrenamientoList[1].nombre}`,
+      `El deportista con el id suministrado no ha registrado el plan de entremaniento '${planesEntrenamientoList[1].nombre}'`,
     );
   });
 });
