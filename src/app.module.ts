@@ -4,8 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { configuration } from './config/configuration';
-import { PlanEntrenamientoEntity } from './planes-entrenamiento/entities/planes-entrenamiento.entity';
-import { RoutineEntity } from './planes-entrenamiento/entities/routine.entity';
+import { DeportistaEntity } from './planes-entrenamiento/entities/deportista.entity';
+import { PlanEntrenamientoEntity } from './planes-entrenamiento/entities/plan-entrenamiento.entity';
+import { RutinaEntity } from './planes-entrenamiento/entities/rutina.entity';
 import { PlanesEntrenamientoModule } from './planes-entrenamiento/planes-entrenamiento.module';
 
 @Module({
@@ -27,7 +28,7 @@ import { PlanesEntrenamientoModule } from './planes-entrenamiento/planes-entrena
         username: configService.get<string>('database.user'),
         password: configService.get<string>('database.password'),
         synchronize: true,
-        entities: [PlanEntrenamientoEntity, RoutineEntity],
+        entities: [PlanEntrenamientoEntity, RutinaEntity, DeportistaEntity],
       }),
       inject: [ConfigService],
     }),
