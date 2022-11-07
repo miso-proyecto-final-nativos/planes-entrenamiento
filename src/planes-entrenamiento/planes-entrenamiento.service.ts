@@ -40,7 +40,6 @@ export class PlanesEntrenamientoService {
           return deportista.id == deportistaId;
         },
       );
-      console.log(deportistaPlanEntrenamiento);
       if (!deportistaPlanEntrenamiento) {
         delete planEntrenamiento.deportistas;
         planesEntrenamientoValidos.push(planEntrenamiento);
