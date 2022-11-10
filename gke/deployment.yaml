@@ -138,7 +138,7 @@ spec:
   healthCheck:
     checkIntervalSec: 10
     timeoutSec: 3
-    requestPath: /api/v1/planes-entrenamiento/health
+    requestPath: /planes-entrenamiento/health
 ---
 kind: Service
 apiVersion: v1
