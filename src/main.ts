@@ -1,4 +1,4 @@
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
@@ -12,11 +12,6 @@ async function bootstrap() {
       host: '0.0.0.0',
       port: port,
     },
-  });
-  app.enableVersioning({
-    type: VersioningType.URI,
-    prefix: 'api/v',
-    defaultVersion: '1',
   });
   app.startAllMicroservices();
   await app.listen(3040);
